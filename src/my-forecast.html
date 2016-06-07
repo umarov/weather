@@ -1,0 +1,82 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+
+<dom-module id="current-forecast">
+
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 16px;
+      }
+
+      paper-button {
+          --paper-button-ink-color: #4285f4;
+          color: deepskyblue;
+      }
+    </style>
+    <iron-ajax
+        auto
+        url="https://api.apixu.com/v1/forecast.json?key=27aca539a31c456ba7231259160706"
+        params='{"q":"22033", "days": "1"}'
+        handle-as="json"
+        last-response="{{response}}"
+        >
+    </iron-ajax>
+    <paper-card heading="Current Forecast in {{response.location.name}}, {{response.location.region}}" elevation="2" animated="true">
+    
+        <div class="card-content">
+            Condition is {{response.current.condition.text}}
+        </div>
+
+        <template is="dom-repeat" items="{{response.forecast.forecastday}}">
+            <paper-item>
+                <paper-item-body two-line>
+                    <div>Highs</div>
+                    <div secondary>{{item.day.maxtemp_f}}</div>
+                </paper-item-body>
+            </paper-item>
+
+            <paper-item>
+                <paper-item-body two-line>
+                    <div>Lows</div>
+                    <div secondary>{{item.day.mintemp_f}}</div>
+                </paper-item-body>
+            </paper-item>
+
+            <paper-item>
+                <paper-item-body two-line>
+                    <div>Avgs</div>
+                    <div secondary>{{item.day.avgtemp_f}}</div>
+                </paper-item-body>
+            </paper-item>
+        </template>
+        
+
+        
+        <div class="card-actions">
+            <paper-button raised>More details</paper-button>
+        </div>
+
+    </paper-card>
+  </template>
+
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'current-forecast',
+      properties: {
+        route: Object
+      },
+
+      handleResponse: function(res, err) {
+          console.log(err);
+      }
+    });
+  </script>
+
+</dom-module>
