@@ -1,20 +1,8 @@
-# Polymer App Toolbox - Drawer Template
+# Weather App
 
-This template is a starting point for building apps using a drawer-based
-layout.  The layout is provided by `app-layout` elements.
+This is a basic weather app that is written using Polymer and it runs on Google's AppEngine Platform.
 
-This template, along with the `polymer-cli` toolchain, also demonstrates use
-of the "PRPL pattern" This pattern allows fast first delivery and interaction with
-the content at the initial route requested by the user, along with fast subsequent
-navigation by pre-caching the remaining components required by the app and
-progressively loading them on-demand as the user navigates through the app.
-
-The PRPL pattern, in a nutshell:
-
-* **Push** components required for the initial route
-* **Render** initial route ASAP
-* **Pre-cache** components for remaining routes
-* **Lazy-load** and progressively upgrade next routes on-demand
+Some of the text from here is taken from Polymer App Toolbox Readme
 
 ### Setup
 
@@ -23,12 +11,6 @@ The PRPL pattern, in a nutshell:
 Install [polymer-cli](https://github.com/Polymer/polymer-cli):
 
     npm install -g polymer-cli
-
-##### Initialize project from template
-
-    mkdir my-app
-    cd my-app
-    polymer init app-drawer-template
 
 ### Start the development server
 
