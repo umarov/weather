@@ -2,6 +2,8 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/current-forecast.html"
+    "src/home-page.html",
+    "src/weather-page.html",
+    "src/settings-page.html"
   ]
 }

@@ -1,0 +1,98 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="weather-page">
+
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 16px;
+      }
+
+      paper-progress {
+        width: 100%;
+      }
+
+
+      paper-item-body {
+        margin-left: 20px;
+      }
+
+      paper-item {
+        margin-bottom: 10px;
+      }
+
+
+    </style>
+    <template is="dom-if" if="{{loading}}">
+      <paper-progress indeterminate="true"></paper-progress>
+
+    </template>
+    <template is="dom-if" if="{{!loading}}">
+      <h1>This is the weather page for {{response.location.name}}, {{response.location.region}}</h1>
+
+      <paper-card heading="Right now it's {{response.current.temp_f}}F and {{response.current.condition.text}}">
+        <div class="card-content">
+          <template is="dom-repeat" items="{{response.forecast.forecastday}}">
+            <paper-item>
+              <img class="iron-icon-1" src="{{item.day.condition.icon}}"/>
+              <paper-item-body four-line>
+                <div>{{stringDate(item.date)}}</div>
+                <div secondary>Lows {{item.day.mintemp_f}}F</div>
+                <div secondary>Highs {{item.day.maxtemp_f}}F</div>
+                <div secondary>Averages {{item.day.avgtemp_f}}F</div>
+              </paper-item-body>
+            </paper-item>
+          </template>
+
+        </div>
+      </paper-card>
+    </template>
+
+    <iron-ajax
+        id="weatherRequest"
+        url="https://api.apixu.com/v1/forecast.json?key=27aca539a31c456ba7231259160706"
+        loading={{loading}}
+        handle-as="json"
+        last-response="{{response}}"
+        >
+    </iron-ajax>
+  </template>
+
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'weather-page',
+      properties: {
+        route: Object,
+        weatherLocation: String
+      },
+
+      observers: [
+        'getWeather(weatherLocation)'
+      ],
+
+      getWeatherParams: function(weatherLocation) {
+        return '{"q":"' + weatherLocation + '", "days": "10"}'
+      },
+
+      getWeather: function(weatherLocation) {
+        console.log(weatherLocation)
+
+        this.$.weatherRequest.params = {"q": weatherLocation, "days": "10"}
+        this.$.weatherRequest.generateRequest()
+      },
+
+      stringDate: function(date) {
+        return (new Date(date)).toDateString();
+      }
+    });
+  </script>
+
+</dom-module>

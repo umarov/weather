@@ -1,5 +1,5 @@
 application: weather-1335
-version: 2
+version: 5
 runtime: python27
 api_version: 1
 threadsafe: yes
@@ -30,4 +30,4 @@ handlers:
 - url: /.*
   static_files: build/bundled/index.html
   upload: build/bundled/index.html
-  secure: always 
+  secure: always

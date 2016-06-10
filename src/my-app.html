@@ -34,6 +34,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --app-secondary-color: black;
       }
 
+      .drawer-toolbar {
+        background-color: #1161E6;
+        color: white;
+      }
+
       app-header {
         background-color: var(--app-primary-color);
         color: #fff;
@@ -63,20 +68,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <app-location route="{{route}}"></app-location>
+    <iron-location path="{{path}}" query="{{query}}"></iron-location>
+    <iron-query-params
+        params-string="{{query}}"
+        params-object="{{queryParams}}">
+    </iron-query-params>
+    <app-route-converter
+        path="{{path}}"
+        query-params="{{queryParams}}"
+        route="{{route}}">
+    </app-route-converter>
     <app-route
         route="{{route}}"
         pattern="/:page"
-        data="{{routeData}}"
-        tail="{{subroute}}"></app-route>
+        data="{{routeData}}"></app-route>
 
     <app-drawer-layout fullbleed>
 
       <!-- Drawer content -->
-      <app-drawer>
-        <app-toolbar>Menu</app-toolbar>
+      <app-drawer id="mainAppDrawer">
+        <app-toolbar class="drawer-toolbar">Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="forecast" href="/forecast">Current Forecast</a>
+          <a name="home-page" href="/home-page">Home</a>
+          <a name="settings-page" href="/settings-page">Settings</a>
         </iron-selector>
       </app-drawer>
 
@@ -91,7 +105,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
-          <current-forecast name="forecast"></current-forecast>
+          <home-page name="home-page"></home-page>
+          <weather-page name="weather-page" weather-location={{queryParams.q}}></weather-page>
+          <settings-page name="settings-page"></settings-page>
         </iron-pages>
 
       </app-header-layout>
@@ -117,20 +133,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       observers: [
-        '_routePageChanged(routeData.page)'
+        '_routePageChanged(path)'
       ],
 
+      isMobile: function() {
+        return window.screen.width < 641
+      },
+
       _routePageChanged: function(page) {
-        this.page = page || 'forecast';
+        page = page.replace(/\//g, '')
+        if (this.isMobile()) {
+          this.$.mainAppDrawer.close();
+        }
+
+        console.log(page)
+
+
+        this.page = page || 'home-page';
+
+
       },
 
       _pageChanged: function(page) {
         // load page import on demand.
         this.importHref(
-          this.resolveUrl('my-' + page + '.html'), null, null, true);
+          this.resolveUrl(page + '.html'), null, null, true);
+
       }
 
     });
+
+
 
   </script>
 

@@ -1,0 +1,116 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+
+<dom-module id="home-page">
+
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 16px;
+      }
+
+      paper-button {
+          --paper-button-ink-color: #4285f4;
+          color: deepskyblue;
+      }
+
+      paper-fab {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        margin-bottom: 26px;
+        margin-right: 26px;
+      }
+
+    </style>
+    <paper-dialog
+          id="locationDialog"
+          backdrop-element="home-page"
+          modal
+          role="dialog"
+          entry-animation="scale-up-animation"
+          exit-animation="fade-out-animation">
+      <h2>Provide your location</h2>
+      <paper-button on-tap="geolocate">Use current location</paper-button>
+      <!-- <p><b>OR</b></p>
+      <paper-button>Enter location manually</paper-button>
+
+      <div>
+        <paper-input hidden$="!locationFormOpened" type="search"
+            placeholder="Enter your location" autosave="test" results="5">
+        </paper-input>
+      </div> -->
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm>Accept</paper-button>
+      </div>
+    </paper-dialog>
+
+    <div>
+      <paper-card animated="true">
+        <div class="card-content">
+          <h1>Welcome to the Weather App</h1>
+          <p>Click the button below to add your location to get the weather!</p>
+        </div
+
+
+      </paper-card>
+    </div>
+    <paper-fab icon="add" on-tap="openWeatherInputDialog"></paper-fab>
+
+
+  </template>
+
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'home-page',
+
+      properties: {
+        route: Object,
+        locationFormOpened: Boolean,
+        location: Object
+      },
+
+      publish: {
+          locationReceived: undefined,
+      },
+      ready: function(){
+          this.locationReceived = this.locationReceived || function(){};
+      },
+
+      openWeatherInputDialog: function() {
+        var body = document.querySelector('body');
+        Polymer.dom(body).appendChild(this.$.locationDialog);
+
+        this.$.locationDialog.toggle();
+      },
+
+      geolocate: function() {
+        var currentElement = this;
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            currentElement.location = position.coords.latitude + "," + position.coords.longitude
+
+            console.log(currentElement.location)
+
+            window.location = "/weather-page?q=" + currentElement.location
+
+          });
+
+
+        }
+      }
+    });
+  </script>
+
+</dom-module>
